@@ -19,6 +19,10 @@ RG_SPECIAL = (143, 56)
 def isotime():
     return datetime.datetime.now().isoformat()
 
+def iso_to_path(time):
+    return time.replace(':', '-')
+
+
 @click.command()
 @click.argument('url')
 @click.option('--output', default=None, help='Output directory - if not specified, this defaults to output_<timestamp>')
@@ -27,7 +31,7 @@ def isotime():
 def monitor(url, output, wait_after_execute, headless):
 
     if output is None:
-        output = f'output-{isotime()}'
+        output = f'output-{iso_to_path(isotime())}'
 
     if os.path.exists(output):
         print('Output directory {output} already exists')
@@ -91,7 +95,7 @@ def monitor(url, output, wait_after_execute, headless):
 
             timestamp = isotime()
 
-            screenshot_filename = os.path.join(output, f'input-{input_index:03d}-{timestamp}.png')
+            screenshot_filename = os.path.join(output, f'input-{input_index:03d}-{iso_to_path(timestamp)}.png')
             image = Image.open(BytesIO(screenshot_bytes))
             image.save(screenshot_filename)
 
@@ -153,7 +157,7 @@ def monitor(url, output, wait_after_execute, headless):
                         print(f' -> change detected!')
 
                         timestamp = isotime()
-                        screenshot_filename = os.path.join(output, f'output-{output_index:03d}-{timestamp}.png')
+                        screenshot_filename = os.path.join(output, f'output-{output_index:03d}-{iso_to_path(timestamp)}.png')
                         image = Image.open(BytesIO(screenshot_bytes))
                         image.save(screenshot_filename)
 
